@@ -29,20 +29,19 @@ REAG_DIR = PROJ_DIR.joinpath("Resources/Prototypes/Reagents")
 SAVE_DIR = PROJ_DIR.joinpath("Tools/recipes-reagents")
 SRTE_DIR = SAVE_DIR.joinpath("sprites")
 
-if not(SAVE_DIR.exists()) or not(SRTE_DIR.exists()):
-    SRTE_DIR.mkdir(parents=True)
-
+if not(SRTE_DIR.joinpath("animations").exists()):
+    SRTE_DIR.joinpath("animations").mkdir(parents=True)
 
 # Constructor for reagent containers sprites
 class SpriteOfLiquidContainer:
 
-    def __init__(self, glass_name, fill, back_sprite=None, front_sprite=None, image_license=None, image_copyright=None):
+    def __init__(self, glass_name, fill, back_sprite=None, front_sprite=None, image_copyright=None, image_license=None):
         self.glass_name = glass_name
+        self.fill = fill
         self.back_sprite = back_sprite
         self.front_sprite = front_sprite
-        self.fill = fill
-        self.image_license = image_license
         self.image_copyright = image_copyright
+        self.image_license = image_license
 
         if self.fill.with_name("meta.json").exists():
             image_file_copyright, image_file_license = get_metadata(self.fill.with_name("meta.json"))
@@ -103,7 +102,7 @@ class SpriteOfLiquidContainer:
 
 
 # Files with BOM cause a yaml.scanner.scannererror and json.decoder.JSONDecodeError exceptions
-# That function check if file have BOM, romove them and rewrite it
+# That function check if file have BOM, remove them and rewrite it
 def check_and_reencode_utf_sig(file):
     u = UniversalDetector()
     u.reset()
@@ -124,19 +123,28 @@ def check_and_reencode_utf_sig(file):
         Path(new_file).replace(file)
         print("Encoding changed successfully")
 
-def get_metadata(file):
-    license_data = None
-    copyright_data = None
+def get_metadata(file, mode=None):
     check_and_reencode_utf_sig(file)
 
     with open(file, "r") as metadata_content:
         data = json.loads(metadata_content.read())
 
-        for key, value in data.items():
-            if key == "license": license_data = value
-            if key == "copyright": copyright_data = value
+    delays = None
+    for key, value in data.items():
+        if key == "copyright": copyright_data = value
+        if key == "license": license_data = value
+        if key == "size": M, N = value["x"], value["y"]
+        if key == "states" and "delays" in value[0]: delays = value[0]["delays"]
 
-        return copyright_data, license_data
+    match mode:
+        case "copyright":
+            return copyright_data, license_data
+        case "anim":
+            return M, N, delays
+        case "ifanim":
+            return True if delays else False
+        case _:
+            return copyright_data, license_data
 
 def save_sprite(sprite, name, image_copyright, image_license, glass_name=None):
     metadata = PngInfo()
@@ -145,6 +153,32 @@ def save_sprite(sprite, name, image_copyright, image_license, glass_name=None):
     sprite = sprite.resize((256, 256), Image.NEAREST)
     sprite.save(SRTE_DIR.joinpath(f"{name}_{glass_name or 'Metamorphic'}.png"), pnginfo=metadata)
     return SRTE_DIR.joinpath(f"{name}_{glass_name or 'Metamorphic'}.png")
+
+def save_anim(sprite, name, M, N, delays, image_copyright, image_license):
+    raw_img = np.array(sprite)
+
+    tiles = [
+        raw_img[x:x+M,y:y+N]
+        for x in range(0, raw_img.shape[0], M)
+        for y in range(0, raw_img.shape[1], N)
+        ]
+
+    frames = []
+    for i in range(len(tiles)-1):
+        frame = Image.fromarray(tiles[i]).resize((256, 256), Image.NEAREST)
+        frames.append(frame)
+
+    metadata_text = f"{name}\n{image_copyright} Is licensed under {image_license}"
+    frames[0].save(SRTE_DIR.joinpath("animations", f"{name}.gif"),
+                format='GIF',
+                optimize=True,
+                append_images=frames[1:len(delays[0])],
+                disposal=2,
+                save_all=True,
+                duration=delays[0],
+                loop=0,
+                comment=metadata_text)
+    return SRTE_DIR.joinpath("animations", f"{name}.gif")
 
 
 # Create containers for liquid
@@ -189,14 +223,23 @@ for drink in drinks:
         data = yaml.load(file, Loader=Loader)
 
     for i in range(len(data)):
-        print(str(Path(drink).stem), i, data[i]["id"]) #DEBUG PRINT
+        print(str(Path(drink).stem), i, data[i]["id"])
 
         if ("metamorphicSprite" in data[i]) and ("sprite" in data[i]["metamorphicSprite"]):
             metamorph_glass_file = PROJ_DIR.joinpath("Resources/Textures/"+data[i]["metamorphicSprite"]["sprite"]+"/icon.png")
 
             with Image.open(metamorph_glass_file) as metamorph_glass:
-                # image_file_copyright, image_file_license =
-                save_sprite(metamorph_glass, metamorph_glass_file.parent.name, *get_metadata(metamorph_glass_file.with_name("meta.json")))
+                if get_metadata(metamorph_glass_file.with_name("meta.json"), mode="ifanim"):
+                    save_anim(metamorph_glass,
+                              metamorph_glass_file.parent.stem,
+                              *get_metadata(metamorph_glass_file.with_name("meta.json"), mode="anim"),
+                              *get_metadata(metamorph_glass_file.with_name("meta.json"), mode="copyright")
+                              )
+                else:
+                    save_sprite(metamorph_glass,
+                                metamorph_glass_file.parent.stem,
+                                *get_metadata(metamorph_glass_file.with_name("meta.json"))
+                                )
 
         if "id" in data[i] and "color" in data[i]:
             name = data[i]["id"]
