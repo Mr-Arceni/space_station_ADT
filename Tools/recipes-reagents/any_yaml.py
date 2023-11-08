@@ -4,6 +4,10 @@
 import wrapt
 import yaml
 
+if __name__ == "__main__":
+    print("[ERR] Run the RUN.py")
+    exit()
+
 
 class Loader(yaml.SafeLoader):
     pass
