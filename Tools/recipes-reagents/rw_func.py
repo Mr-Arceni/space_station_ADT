@@ -51,7 +51,7 @@ class SpriteOfLiquidContainer:
             print(f"There is no liquid color for {name}. Skip")
             return None
 
-        r, g, b, a = ImageColor.getcolor(color, "RGBA") # type: ignore
+        r, g, b, a = ImageColor.getcolor(color, "RGBA")
 
         # Assembling the sprite
         with Image.open(self.fill) as fill:
