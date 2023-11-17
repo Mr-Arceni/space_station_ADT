@@ -1,5 +1,7 @@
 import yaml
+import os
 
+from pathlib import Path
 from any_yaml import Loader
 
 from project_dirs import *
@@ -13,10 +15,10 @@ else:
 
 
 # takes "dict_generator" as string with itareble "data"
-def get_data(path, dict_generator):
+def get_data(path: str | os.PathLike, dict_generator: str) -> dict:
     print(f"[INFO] - {path.name}")
     dct = {}
-    files = sorted(path.glob("**/*.yml"))
+    files = sorted(Path(path).glob("**/*.yml"))
 
     for file in files:
         check_and_reencode_utf_sig(file)

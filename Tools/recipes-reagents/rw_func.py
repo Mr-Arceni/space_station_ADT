@@ -1,5 +1,6 @@
 import numpy as np
 import json
+import os
 
 from pathlib import Path
 from chardet import UniversalDetector
@@ -16,11 +17,11 @@ if __name__ == "__main__":
 # Constructor for reagent containers sprites
 class SpriteOfLiquidContainer:
 
-    def __init__(self, glass_name, fill, back_sprite=None, front_sprite=None, image_copyright=None, image_license=None):
+    def __init__(self, glass_name: str, fill: str | os.PathLike, back_sprite: str | os.PathLike = None, front_sprite: str | os.PathLike = None, image_copyright: str = None, image_license: str = None):
         self.glass_name = glass_name
-        self.fill = fill
-        self.back_sprite = back_sprite
-        self.front_sprite = front_sprite
+        self.fill = Path(fill)
+        self.back_sprite = Path(back_sprite) if back_sprite else None
+        self.front_sprite = Path(front_sprite) if front_sprite else None
         self.image_copyright = image_copyright
         self.image_license = image_license
 
@@ -46,7 +47,7 @@ class SpriteOfLiquidContainer:
             self.image_license = "UNKNOWN LICENSE"
 
 
-    def get_sprite(self, name, color=None):
+    def get_sprite(self, name = str, color: str = "") -> os.PathLike | None:
         if not(color):
             print(f"There is no liquid color for {name}. Skip")
             return None
@@ -83,7 +84,7 @@ class SpriteOfLiquidContainer:
 
 # Files with BOM cause a yaml.scanner.scannererror and json.decoder.JSONDecodeError exceptions
 # That function check if file have BOM, remove them and rewrite it
-def check_and_reencode_utf_sig(file):
+def check_and_reencode_utf_sig(file: str | os.PathLike) -> None:
     u = UniversalDetector()
     u.reset()
 
@@ -103,7 +104,7 @@ def check_and_reencode_utf_sig(file):
         Path(new_file).replace(file)
         print("Encoding changed successfully")
 
-def get_metadata(file, mode=None):
+def get_metadata(file: str | os.PathLike, mode: str = "copyright") -> tuple | bool:
     check_and_reencode_utf_sig(file)
 
     with open(file, "r") as metadata_content:
@@ -123,11 +124,9 @@ def get_metadata(file, mode=None):
         case "anim":
             return M, N, delays
         case "ifanim":
-            return delays
-        case _:
-            return copyright_data, license_data
+            return True if delays else False
 
-def save_sprite(sprite, name, image_copyright, image_license, glass_name=None):
+def save_sprite(sprite: Image.Image, name: str, image_copyright: str, image_license: str, glass_name: str = "") -> os.PathLike:
     metadata = PngInfo()
     metadata.add_text("Copyright", f"{glass_name or ''}{name}\n{image_copyright} License: {image_license}")
 
@@ -135,7 +134,7 @@ def save_sprite(sprite, name, image_copyright, image_license, glass_name=None):
     sprite.save(SRTE_DIR.joinpath(f"{name}_{glass_name or ''}.png"), pnginfo=metadata)
     return SRTE_DIR.joinpath(f"{name}_{glass_name or ''}.png")
 
-def save_anim(sprite, name, M, N, delays, image_copyright, image_license):
+def save_anim(sprite: Image.Image, name: str, M: int, N: int, delays: list, image_copyright: str, image_license: str) -> os.PathLike:
     raw_img = np.array(sprite)
 
     tiles = [

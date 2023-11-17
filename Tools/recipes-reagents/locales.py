@@ -11,9 +11,14 @@ else:
 
 
 # return dict loaded from Resources/Locale/name
-def create_locale(name):
+def create_locale(name: str) -> dict:
     print(f"[INFO] - {name}...")
-    files = sorted(LOCL_DIR.joinpath(name).glob("**/*.ftl"))
+    path = LOCL_DIR.joinpath(name)
+
+    if not(path.exists()):
+        raise FileNotFoundError(f"{name} locale not found in Resources/Locale/")
+
+    files = sorted(path.glob("**/*.ftl"))
 
     value_list = []
     for file in files:
@@ -31,7 +36,7 @@ def create_locale(name):
 
     return {pair[0]: pair[1] for pair in value_list}
 
-def get_locale(lang, key):
+def get_name(lang: str, key: str) -> str:
     for locale in list_locales.keys():
         if locale == lang:
             if key in list_locales[lang]:

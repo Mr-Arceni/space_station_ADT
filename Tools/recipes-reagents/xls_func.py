@@ -4,7 +4,7 @@ from locales import *
 from glasses import *
 
 
-def get_xls_format(xls_format, xls_file, mode="single") -> any:
+def get_xls_format(xls_format: dict, xls_file: object, mode: str = "single") -> object | dict:
     match mode:
         case "single":
             return xls_file.add_format(xls_format)
@@ -12,7 +12,7 @@ def get_xls_format(xls_format, xls_file, mode="single") -> any:
             return {key: xls_file.add_format(xls_format_prop) for key, xls_format_prop in xls_format.items()}
 
 
-def xls_write_reagent(reagent, properties: dict, order: dict, xls_worksheets, first_format=None, second_format=None) -> None:
+def xls_write_reagent(reagent: str, properties: dict, order: dict, xls_worksheets: dict, first_format: object = None, second_format: object = None) -> None:
     animation, main_sprite = None, None
     print("[INFO] Writing: "+str(reagent))
 
@@ -72,18 +72,18 @@ def xls_write_reagent(reagent, properties: dict, order: dict, xls_worksheets, fi
 
     col += 1
     if "name" in properties:
-        xls_worksheets[group].write(order[group], col, get_locale("en", properties["name"]))
-        xls_worksheets[group].write(order[group]+1, col, get_locale("ru", properties["name"]))
+        xls_worksheets[group].write(order[group], col, get_name("en", properties["name"]))
+        xls_worksheets[group].write(order[group]+1, col, get_name("ru", properties["name"]))
 
     col += 1
     if "desc" in properties:
-        xls_worksheets[group].write(order[group], col, get_locale("en", properties["desc"]))
-        xls_worksheets[group].write(order[group]+1, col, get_locale("ru", properties["desc"]))
+        xls_worksheets[group].write(order[group], col, get_name("en", properties["desc"]))
+        xls_worksheets[group].write(order[group]+1, col, get_name("ru", properties["desc"]))
 
     col += 1
     if "physicalDesc" in properties:
-        xls_worksheets[group].write(order[group], col, get_locale("en", properties["physicalDesc"]))
-        xls_worksheets[group].write(order[group]+1, col, get_locale("ru", properties["physicalDesc"]))
+        xls_worksheets[group].write(order[group], col, get_name("en", properties["physicalDesc"]))
+        xls_worksheets[group].write(order[group]+1, col, get_name("ru", properties["physicalDesc"]))
 
     col += 1
     if main_sprite:
