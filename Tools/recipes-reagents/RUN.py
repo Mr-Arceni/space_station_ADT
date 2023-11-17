@@ -38,7 +38,7 @@ with xlsxwriter.Workbook(SAVE_DIR.joinpath(path_file)) as xls_file:
         k = 0
         for col in headers.values():
             if "format" in col:
-                worksheet.set_column(k, k, col["width"], col["format"])
+                worksheet.set_column(k, k, col["width"], xls_file.add_format(col["format"]))
             else:
                 worksheet.set_column(k, k, col["width"])
             k += 1
