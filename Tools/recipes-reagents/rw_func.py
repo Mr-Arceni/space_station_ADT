@@ -32,9 +32,9 @@ class SpriteOfLiquidContainer:
             image_file_copyright, image_file_license = get_metadata(self.fill.with_name("meta.json"))
 
         if not(image_file_license) or not(image_file_copyright):
-            print(f"meta.json has no license or/and copyright in {self.glass_name}")
+            print(f"[WARN] meta.json has no license or/and copyright in {self.glass_name}")
         elif self.image_license or self.image_copyright:
-            print("meta.json has license and copyright, but there have been defined image_license or/and image_copyright.\nDefined values will be used INSTEAD values from meta.json")
+            print("[WARN] meta.json has license and copyright, but there have been defined image_license or/and image_copyright.\nDefined values will be used INSTEAD values from meta.json")
 
         if not(self.image_license):
             self.image_license = image_file_license
@@ -42,14 +42,14 @@ class SpriteOfLiquidContainer:
             self.image_copyright = image_file_copyright
 
         if (not(image_file_license) and not(self.image_license)) or (not(image_file_copyright) and not(self.image_copyright)):
-            print(f"The copyright or license of {self.glass_name} is not defined or not found in meta.json")
+            print(f"[WARN] The copyright or license of {self.glass_name} is not defined or not found in meta.json")
             self.image_copyright = f"From the {Path(PROJ_DIR.name)}"
             self.image_license = "UNKNOWN LICENSE"
 
 
     def get_sprite(self, name = str, color: str = "") -> os.PathLike | None:
         if not(color):
-            print(f"There is no liquid color for {name}. Skip")
+            print(f"[INFO] There is no liquid color for {name}. Skip")
             return None
 
         r, g, b, a = ImageColor.getcolor(color, "RGBA")

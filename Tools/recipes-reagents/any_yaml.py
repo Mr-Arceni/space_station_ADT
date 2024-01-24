@@ -26,7 +26,7 @@ class Tagged(wrapt.ObjectProxy):
         self.tag = tag
 
     def __repr__(self):
-        return f"{type(self).__name__}({self.tag!r}, {self.__wrapped__!r})"
+        return f"{self.tag!r}: {self.__wrapped__!r}"
 
 
 def construct_undefined(self, node):
