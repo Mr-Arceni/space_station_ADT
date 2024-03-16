@@ -287,35 +287,63 @@ effects = {
         }
     },
 
-    # PLACEHOLDER EFFECTS
-    # TODO: fill the properties
     "ChemCleanBloodstream": {
+        #Quantity of reagent units that will be deleted in one metabolism tick.
+        "cleanseRate": -3,
         "NAMES": {
-            "MAIN": "ChemCleanBloodstream",
+            "MAIN": "Очищение кровотока",
+            "cleanseRate": "Количество единиц"
         }
     },
 
     "GenericStatusEffect": {
+        # basically just adds a component to an entity for a given time.
+        "key": None,
+        "component": None,
+        "time": 2,
+        # true - refresh status effect time,  false - accumulate status effect time
+        "refresh": True,
+        "type": None,
         "NAMES": {
-            "MAIN": "GenericStatusEffect",
+            "MAIN": "Изменение эффектов",
+            "key": "Эффект",
+            "component": "Компонент",
+            "time": "Длительность (сек.)",
+            "refresh": "Возобновляемость",
+            "type": "Тип"
         }
     },
 
     "Oxygenate": {
+        # Literally makes gas breathable.
+        "factor": 1,
         "NAMES": {
-            "MAIN": "Oxygenate",
+            "MAIN": "Поглощение газа",
+            "factor": "Коэфицент"
         }
     },
 
     "ModifyLungGas": {
+        # Used to breathe out gas. 
+        "ratios": None,
         "NAMES": {
-            "MAIN": "ModifyLungGas",
+            "MAIN": "Выделение газа",
+            "ratios": "Соотношение"
         }
     },
 
     "Jitter": {
+        # Shakes the character.
+        "amplitude": 10,
+        "frequency": 4,
+        "time": 2,
+        "refresh": True,
         "NAMES": {
-            "MAIN": "Jitter",
+            "MAIN": "Тряска",
+            "amplitude": "Амплитуда",
+            "frequency": "Частота",
+            "time": "Длительность",
+            "refresh": "Возобновляемость"
         }
     },
 }
