@@ -346,8 +346,37 @@ effects = {
             "refresh": "Возобновляемость"
         }
     },
-}
 
+    "AdjustAlert": {
+        # Causes an icon to the right of the screen.
+        "alertType": None,
+        "clear": None,
+        "cooldown": None,
+        "time": None,
+        "NAMES": {
+            "MAIN": "Предупреждение",
+            "alertType": "Тип предупреждения",
+            "clear": "Очищает",
+            "cooldown": "Кулдаун",
+            "time": "Время (сек.)"
+        }
+    },
+
+    "Embalm": {
+        #Makes entity unable to rot but also cannot be revived by defibrillator.
+        "NAMES": {
+            "MAIN": "Бальзамирование"
+        }
+    },
+
+    "LingEggs": {
+        #Quote: "Gives the entity a component that turns it into a f#cking changeling"
+        "NAMES": {
+            # Я честно без понятия, как это описать иначе.
+            "MAIN": "Откладывает личинки генокрада"
+        }
+    }
+}
 
 # takes "dict_generator" as string with itareble "data"
 def get_data(path: str | os.PathLike, dict_generator: str) -> dict:
