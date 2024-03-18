@@ -375,7 +375,131 @@ effects = {
             # Я честно без понятия, как это описать иначе.
             "MAIN": "Откладывает личинки генокрада"
         }
-    }
+    },
+
+    "RobustHarvest": {
+        "PotencyLimit": 50,
+        "PotencyIncrease": 3,
+        "PotencySeedlessThreshold": 30,
+        "NAMES": {
+            "MAIN": "Повышение потенции растения",
+            "PotencyLimit": "Лимит потенции",
+            "PotencyIncrease": "Повышение потенции",
+            # Seedless.
+            "PotencySeedlessThreshold": "Лимит потенции до обессеменивания растения", 
+        }
+    },
+
+    "PlantPhalanximine": {
+        # Makes plant holders genetics viable. I guess.        
+        "NAMES": {
+            "MAIN": ""
+        }
+    },
+
+    "PlantDiethylamine": {
+        #Don't really know why is it another .cs file.
+        #Basically, it just increases lifespan of a plant and it's endurance with some chance.
+        "NAMES": {
+            "MAIN": "Увеличение долговечности растения"
+        }
+    },
+
+    "PlantCryoxadone": {
+        #Deviates stages of a plant.
+        "NAMES": {
+            "MAIN": "Отмена стадии роста растения"
+        }
+    },
+
+    "PlantAffectGrowth": {
+        #Honestly I can't understand what's this, needs testing in game.
+        "NAMES": {
+            "MAIN": "Влияние на рост растения"
+        }
+    },
+
+    "PlantAdjustWeeds": {
+        "Amount": 1,
+        "Prob": 1, # " = (80)" - was written in a "PlantAdjustAttribute". Idk.
+        "NAMES": {
+            "MAIN": "Изменение количества сорняков в растении",
+            "Amount": "Количество",
+            "Prob": "Шанс"
+        }
+    },
+
+    "PlantAdjustWater": {
+        "Amount": 1,
+        "Prob": 1,        
+        "NAMES": {
+            "MAIN": "Изменение количества воды в растении",
+            "Amount": "Количество",
+            "Prob": "Шанс"            
+        }
+    },
+
+    "PlantAdjustToxins": {
+        "Amount": 1,
+        "Prob": 1,        
+        "NAMES": {
+            "MAIN": "Изменение количества токсинов в растении",
+            "Amount": "Количество",
+            "Prob": "Шанс"            
+        }
+    },
+
+    "PlantAdjustPests": {
+        "Amount": 1,
+        "Prob": 1,        
+        "NAMES": {
+            "MAIN": "Изменение количества пестицидов в растении",
+            "Amount": "Количество",
+            "Prob": "Шанс"
+        }
+    },
+
+    "PlantAdjustNutrition": {
+        "Amount": 1,
+        "Prob": 1,        
+        "NAMES": {
+            "MAIN": "Изменение насыщения растения", #?
+            "Amount": "Количество",
+            "Prob": "Шанс"
+        }
+    },
+
+    "PlantAdjustMutationMod": {
+        "Amount": 1,
+        "Prob": 1,        
+        "NAMES": {
+            "MAIN": "Изменение модификатора мутации растения",  #?
+            "Amount": "Количество",
+            "Prob": "Шанс"
+        }
+    },
+    
+    "PlantAdjustMutationLevel": {
+        "Amount": 1,
+        "Prob": 1,        
+        "NAMES": {
+            "MAIN": "Изменение уровня мутации растения",
+            "Amount": "Количество",
+            "Prob": "Шанс" 
+        }
+    },
+        
+    "PlantAdjustHealth": {
+        "Amount": 1,
+        "Prob": 1,        
+        "NAMES": {
+            "MAIN": "Изменение уровня здоровья растения",
+            "Amount": "Количество",
+            "Prob": "Шанс"
+        }
+    },
+
+    #"PlantAdjustAttribute" is a parent to any "PlantAdjust...", that does all the checks needed for plants.
 }
 
 # takes "dict_generator" as string with itareble "data"
